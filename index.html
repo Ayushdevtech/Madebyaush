@@ -55,6 +55,25 @@
     <div class="bottom-hint">W A S D MOVE <i></i> SHIFT RUN <i></i> SPACE JUMP <i></i> E VEHICLE</div>
   </div>
 
+
+  <div id="mobile-controls" class="mobile-controls hidden">
+    <div class="joystick-area">
+      <div id="joystick-base" class="joystick-base"><div id="joystick-knob" class="joystick-knob"></div></div>
+      <span class="joystick-label">MOVE</span>
+    </div>
+    <div class="mobile-actions">
+      <button id="jump-btn" class="mobile-action">JUMP</button>
+      <button id="run-btn" class="mobile-action">RUN</button>
+      <button id="use-btn" class="mobile-action action-main">ENTER</button>
+      <button id="scan-btn" class="mobile-action">SCAN</button>
+    </div>
+    <div class="car-controls hidden" id="car-controls">
+      <button id="brake-btn" class="mobile-action">BRAKE</button>
+      <button id="accelerate-btn" class="mobile-action action-main">GAS</button>
+    </div>
+    <div class="rotate-hint">ROTATE YOUR PHONE TO LANDSCAPE</div>
+  </div>
+
   <div id="loading" class="loading"><div class="loader"></div><span>BUILDING YOUR CITY...</span></div>
   <script type="module" src="game.js"></script>
 </body>
