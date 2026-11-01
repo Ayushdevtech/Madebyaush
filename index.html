@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AYUSH CITY | Open World</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="game-root"></div>
+
+  <header class="topbar">
+    <div class="brand">AYUSH<span> CITY</span></div>
+    <div class="creator">MADE BY AYUSHDEV</div>
+    <div class="top-status"><span class="status-dot"></span> OPEN WORLD</div>
+  </header>
+
+  <section id="intro" class="overlay">
+    <div class="intro-card">
+      <div class="eyebrow">AN ORIGINAL OPEN-WORLD EXPERIENCE</div>
+      <h1>AYUSH <span>CITY</span></h1>
+      <p class="intro-sub">Explore the city. Find your route. Make it yours.</p>
+      <div class="feature-grid">
+        <div><b>01</b><span>Explore a living city</span></div>
+        <div><b>02</b><span>Drive cars freely</span></div>
+        <div><b>03</b><span>Meet people & bots</span></div>
+        <div><b>04</b><span>Complete city missions</span></div>
+      </div>
+      <div class="intro-actions">
+        <button id="start-btn" class="primary-btn">ENTER CITY</button>
+        <button id="close-intro" class="close-btn" aria-label="Close introduction">×</button>
+      </div>
+      <div class="controls-note">WASD / ARROWS MOVE&nbsp; · &nbsp;E ENTER / EXIT CAR&nbsp; · &nbsp;SHIFT RUN</div>
+    </div>
+  </section>
+
+  <div id="hud" class="hud hidden">
+    <div class="hud-left">
+      <div class="location-card"><small>LOCATION</small><strong id="location-name">CENTRAL DISTRICT</strong></div>
+      <div class="mission-card"><small>CURRENT OBJECTIVE</small><strong id="mission-text">Explore the city</strong></div>
+    </div>
+    <div class="hud-right">
+      <div class="clock-card"><small>LOCAL TIME</small><strong id="clock">12:00</strong></div>
+      <div class="mini-map-wrap"><canvas id="minimap" width="150" height="150"></canvas><span>MAP</span></div>
+    </div>
+    <div id="toast" class="toast"></div>
+    <div id="interaction" class="interaction hidden">PRESS <b>E</b> TO ENTER VEHICLE</div>
+    <div class="bottom-hint">W A S D MOVE <i></i> SHIFT RUN <i></i> SPACE JUMP <i></i> E VEHICLE</div>
+  </div>
+
+  <div id="loading" class="loading"><div class="loader"></div><span>BUILDING YOUR CITY...</span></div>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
