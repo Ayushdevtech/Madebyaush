@@ -222,7 +222,42 @@ const keys={};
 addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(e.key.toLowerCase()))e.preventDefault();});
 addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
 let started=false,inCar=null,playerSpeed=0,verticalVelocity=0,onGround=true,walkClock=0,missionCount=0;
+
+const mobileControls=document.getElementById('mobile-controls');
+const joystickBase=document.getElementById('joystick-base');
+const joystickKnob=document.getElementById('joystick-knob');
+const carControlsEl=document.getElementById('car-controls');
+let joystickPointer=null;
+function clearStickKeys(){keys.w=keys.a=keys.s=keys.d=false;keys.arrowup=keys.arrowdown=keys.arrowleft=keys.arrowright=false;}
+function moveStick(e){
+ const r=joystickBase.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+ let dx=e.clientX-cx,dy=e.clientY-cy;const max=r.width*.34,len=Math.hypot(dx,dy);
+ if(len>max){dx=dx/len*max;dy=dy/len*max;}
+ joystickKnob.style.transform=`translate(${dx}px,${dy}px)`;
+ keys.w=dy/max<-.22;keys.s=dy/max>.22;keys.a=dx/max<-.22;keys.d=dx/max>.22;
+}
+function releaseStick(){joystickPointer=null;joystickKnob.style.transform='translate(0px,0px)';clearStickKeys();}
+joystickBase.addEventListener('pointerdown',e=>{e.preventDefault();joystickPointer=e.pointerId;joystickBase.setPointerCapture(e.pointerId);moveStick(e);});
+joystickBase.addEventListener('pointermove',e=>{if(e.pointerId===joystickPointer){e.preventDefault();moveStick(e);}});
+joystickBase.addEventListener('pointerup',e=>{if(e.pointerId===joystickPointer)releaseStick();});
+joystickBase.addEventListener('pointercancel',releaseStick);
+function bindTouchHold(id,key){
+ const el=document.getElementById(id);
+ el.addEventListener('pointerdown',e=>{e.preventDefault();keys[key]=true;el.classList.add('pressed');});
+ const up=()=>{keys[key]=false;el.classList.remove('pressed');};
+ el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);el.addEventListener('pointerleave',up);
+}
+bindTouchHold('run-btn','shift');bindTouchHold('accelerate-btn','w');bindTouchHold('brake-btn','s');
+document.getElementById('jump-btn').addEventListener('pointerdown',e=>{e.preventDefault();if(started&&!inCar&&onGround){verticalVelocity=6.4;onGround=false;}});
+document.getElementById('use-btn').addEventListener('pointerdown',e=>{e.preventDefault();if(started)toggleCar();});
+document.getElementById('scan-btn').addEventListener('pointerdown',e=>{
+ e.preventDefault();if(!started||inCar)return;
+ const b=bots.find(x=>!x.tagged&&x.mesh.position.distanceTo(player.position)<4.2);
+ if(b){b.tagged=true;b.mesh.traverse(o=>{if(o.material&&o.material.color)o.material.color.set(0x4c9f83);});missionCount++;missionEl.textContent=`Scan security bots (${missionCount}/4)`;showToast(`Bot scanned. ${4-missionCount} remaining.`);if(missionCount===4){missionEl.textContent='City patrol complete';showToast('MISSION COMPLETE — CITY PATROL');}}
+});
+
 let cameraYaw=0,cameraPitch=.22,dragging=false,lastPointer={x:0,y:0};
+renderer.domElement.style.touchAction='none';
 renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;lastPointer={x:e.clientX,y:e.clientY};renderer.domElement.setPointerCapture(e.pointerId);});
 renderer.domElement.addEventListener('pointerup',()=>dragging=false);
 renderer.domElement.addEventListener('pointermove',e=>{if(!dragging||!started)return;cameraYaw-=(e.clientX-lastPointer.x)*.004;cameraPitch=THREE.MathUtils.clamp(cameraPitch+(e.clientY-lastPointer.y)*.002,-.05,.7);lastPointer={x:e.clientX,y:e.clientY};});
@@ -235,13 +270,13 @@ function toggleCar(){
   if(inCar){
     const pos=inCar.mesh.position.clone();
     player.position.set(pos.x+2.1,0,pos.z);player.rotation.y=inCar.mesh.rotation.y;
-    inCar.occupied=false;inCar.speed=0;inCar=null;player.visible=true;
+    inCar.occupied=false;inCar.speed=0;inCar=null;player.visible=true;carControlsEl.classList.add('hidden');
     showToast('You are back on foot.');
     return;
   }
   let nearest=null,dist=4.5;
   for(const v of vehicles){if(v.traffic)continue;const d=v.mesh.position.distanceTo(player.position);if(d<dist){dist=d;nearest=v;}}
-  if(nearest){inCar=nearest;nearest.occupied=true;player.visible=false;showToast('Vehicle ready. Use W A S D to drive.');}
+  if(nearest){inCar=nearest;nearest.occupied=true;player.visible=false;carControlsEl.classList.remove('hidden');showToast('Vehicle ready. Use W A S D to drive.');}
 }
 function updatePlayer(dt,t){
   if(inCar){
@@ -347,12 +382,5 @@ requestAnimationFrame(animate);
 
 function startGame(){
   started=true;intro.classList.add('hidden');hud.classList.remove('hidden');
-  showToast('Welcome to Ayush City. Explore freely.');
-}
-document.getElementById('start-btn').addEventListener('click',startGame);
-document.getElementById('close-intro').addEventListener('click',startGame);
-setTimeout(()=>{loading.style.opacity='0';setTimeout(()=>loading.remove(),550);},650);
-addEventListener('resize',()=>{
-  camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.65));
-});
+  if(matchMedia('(pointer: coarse)').matches)mobileControls.classList.remove('hidden');
+  try{if(screen.orientation&&screen.or
