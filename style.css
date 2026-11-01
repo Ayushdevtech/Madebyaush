@@ -38,3 +38,34 @@ canvas{display:block}
 .loader{width:28px;height:28px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:650px){.topbar{padding:0 13px}.creator{font-size:8px;letter-spacing:1.4px}.top-status{font-size:8px}.intro-card{padding:30px 22px 22px}.feature-grid{gap:8px}.feature-grid div{padding:10px 8px}.feature-grid span{font-size:10px}.hud-left{top:68px;left:9px}.location-card,.mission-card{min-width:140px;padding:9px}.hud-right{top:68px;right:9px;gap:5px}.clock-card{display:none}.mini-map-wrap{width:108px;height:126px;padding:4px}.mini-map-wrap canvas{width:98px;height:98px}.bottom-hint{font-size:7px;letter-spacing:.5px;bottom:9px;padding:9px 7px}.bottom-hint i{margin:0 4px 2px}}
+
+
+/* Mobile touch controls */
+.mobile-controls{position:fixed;z-index:8;inset:0;pointer-events:none;touch-action:none}
+.joystick-area{position:absolute;left:22px;bottom:38px;width:145px;height:145px;pointer-events:auto;touch-action:none}
+.joystick-base{position:absolute;inset:0;border:2px solid rgba(255,255,255,.48);border-radius:50%;background:rgba(12,25,38,.35);backdrop-filter:blur(3px);box-shadow:0 5px 25px rgba(0,0,0,.2);touch-action:none}
+.joystick-base:before,.joystick-base:after{content:"";position:absolute;background:rgba(255,255,255,.17)}
+.joystick-base:before{left:50%;top:12%;bottom:12%;width:1px}.joystick-base:after{top:50%;left:12%;right:12%;height:1px}
+.joystick-knob{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px;border:2px solid rgba(255,255,255,.72);border-radius:50%;background:linear-gradient(145deg,rgba(126,231,202,.9),rgba(34,115,111,.88));box-shadow:0 4px 15px rgba(0,0,0,.35);pointer-events:none}
+.joystick-label{position:absolute;left:50%;bottom:-19px;transform:translateX(-50%);font-size:9px;letter-spacing:2px;color:#e7f0f4;text-shadow:0 1px 4px #000}
+.mobile-actions{position:absolute;right:20px;bottom:28px;display:grid;grid-template-columns:repeat(2,66px);gap:10px;pointer-events:auto}
+.mobile-action{width:66px;height:54px;border:1px solid rgba(255,255,255,.45);border-radius:13px;background:rgba(12,25,38,.68);color:#fff;font-size:10px;font-weight:900;letter-spacing:1px;backdrop-filter:blur(5px);box-shadow:0 4px 12px rgba(0,0,0,.2);touch-action:none;user-select:none;-webkit-user-select:none}
+.mobile-action:active,.mobile-action.pressed{background:rgba(120,224,192,.9);color:#09221e;border-color:#b7ffea}
+.mobile-action.action-main{border-color:rgba(120,224,192,.85);color:#a9f6dc}
+.car-controls{position:absolute;right:172px;bottom:32px;display:flex;gap:9px;pointer-events:auto}
+.car-controls .mobile-action{width:62px;height:48px}
+.rotate-hint{display:none;position:absolute;inset:0;align-items:center;justify-content:center;text-align:center;background:rgba(5,12,20,.94);font-size:13px;letter-spacing:2px;font-weight:900;color:#dff8ef;padding:30px}
+@media(pointer:coarse){.mobile-controls:not(.hidden){display:block}.bottom-hint{display:none}}
+@media(pointer:coarse) and (orientation:portrait){
+ .mobile-controls:not(.hidden) .rotate-hint{display:flex}
+ .mobile-controls:not(.hidden) .joystick-area,.mobile-controls:not(.hidden) .mobile-actions,.mobile-controls:not(.hidden) .car-controls{display:none}
+}
+@media(max-width:650px) and (orientation:landscape){
+ .joystick-area{left:16px;bottom:23px;width:122px;height:122px}
+ .joystick-knob{width:52px;height:52px;margin:-26px}
+ .mobile-actions{right:14px;bottom:17px;grid-template-columns:repeat(2,60px);gap:7px}
+ .mobile-action{width:60px;height:47px;font-size:9px}
+ .car-controls{right:145px;bottom:20px;gap:6px}
+ .car-controls .mobile-action{width:55px;height:43px}
+ .hud-left{top:62px}.hud-right{top:62px}
+}
